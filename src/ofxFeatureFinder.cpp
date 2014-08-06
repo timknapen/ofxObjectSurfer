@@ -230,6 +230,14 @@ bool ofxFeatureFinder::detectObject(ofxFeatureFinderObject object, cv::Mat &homo
 
     // assume it is CV_32F
     // Create Flann KDTree index
+    if(imageDescriptors.empty()){ // this would crash flann
+        cout << "WARNING : imageDescriptors data = NULL" << endl;
+        return false;
+    }
+    if(object.descriptors.empty()){ // this would crash flann
+        cout << "WARNING : object data == NULL"<<endl;
+        return false;
+    }
     cv::flann::Index flannIndex(imageDescriptors, cv::flann::KDTreeIndexParams(), cvflann::FLANN_DIST_EUCLIDEAN);
     results = cv::Mat(object.descriptors.rows, k, CV_32SC1); // Results index
     dists = cv::Mat(object.descriptors.rows, k, CV_32FC1); // Distance results are CV_32FC1
